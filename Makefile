@@ -6,7 +6,7 @@
 #    By: elias <elias@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/29 19:25:41 by emoreau           #+#    #+#              #
-#    Updated: 2023/09/26 16:45:08 by elias            ###   ########.fr        #
+#    Updated: 2023/09/26 17:23:32 by elias            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS	=	philo.c\
 
 OBJS = $(patsubst %.c,$(OBJ_DIR)%.o,$(SRCS))
 
-NAME	=	push_swap
+NAME	=	philo
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -g3
 RM		=	rm -rf
