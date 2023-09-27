@@ -6,7 +6,7 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 17:23:45 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 18:32:36 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ int	die(t_data *data)
 
 void eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->data->print);
+	// pthread_mutex_lock(philo->data->print);
 	pthread_mutex_lock(philo->fork);
-	printf("philosophe %d has taken a fork\n", philo->num);
+	ft_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->next->fork);
-	printf("philosophe %d has taken a fork\n", philo->num);
-	printf("philosophe %d is eating\n", philo->num);
-
-	pthread_mutex_unlock(philo->data->print);
+	ft_print(philo, "has taken a fork");
+	ft_print(philo, "is eating");
+	// pthread_mutex_unlock(philo->data->print);
 	usleep(philo->data->time_eat * 1000);
 	pthread_mutex_unlock(philo->fork);
 	pthread_mutex_unlock(philo->next->fork);
@@ -49,7 +48,7 @@ void eat(t_philo *philo)
 
 void	ft_spleep(t_philo *philo)
 {
-	printf("philosophe %d is sleeping\n", philo->num);
+	ft_print(philo, "is sleeping");
 	usleep(philo->data->time_sleep * 1000);
 
 	// ft_usleep(data->time_sleep);
@@ -76,35 +75,34 @@ void	*routine(void *arg)
 	return (philo);
 }
 
+void	ft_print(t_philo *philo, char *str)
+{
+	printf("%ld	%d %s\n", ft_time() - philo->data->start, philo->num, str);
+}
+
 int	main(int ac, char **av)
 {
-	int	i;
+	int		i;
 	t_philo	*philo;
-	t_data	*data;
+	// t_data	*data;
 
 	if (ac != 5 && ac != 6)
 		return (printf("erreur arg\n"), 0);
+
 	i = 0;
 
-	philo = chaine_philo(atoi_philo(av[1]));
-	data = init(ac, av);
-	while (i < data->number)
-	{
-		philo->data = data;
-		philo = philo->next;
-		i++;
-	}
-	i = 0;
+	philo = init(ac, av);
 	// (void)data;
 	// cree un thread pour chaque philosof
 	// un philosophe sur 2 manges
 	// les autres pensesou dorment
 	// des qu'ils ont finis de manger les philosophe qui penses vont manger 
-	// while (data->philo->num != data->number)
+	// while (philo->num != philo->data->number)
 	// {
-	// 	printf("%d\n", data->philo->num);
-	// 	data->philo = data->philo->next;
+	// 	printf("%d\n", philo->num);
+	// 	philo = philo->next;
 	// }
+	// printf("time = %ld\n", philo->data->start);
 
 	while (i < philo->data->number)
 	{

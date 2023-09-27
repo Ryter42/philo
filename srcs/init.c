@@ -6,7 +6,7 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 17:26:18 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 18:34:01 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_philo	*create_philo(t_philo *next, int i)
 	if (!philo->thread)
 		return (NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t));
-	if (!philo->thread)
+	if (!philo->fork)
 		return (NULL);
 	pthread_mutex_init(philo->fork, NULL);
 	philo->num = i;
@@ -87,19 +87,45 @@ t_philo	*chaine_philo(int i)
 	return (philo);
 }
 
-t_data	*init(int ac, char **av)
+long	ft_time(void)
+{
+	struct timeval	time;
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec * 0.001));
+}
+
+t_data	*create_data(int ac, char **av)
 {
 	t_data *data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	pthread_mutex_init(data->print, NULL);
+	pthread_mutex_init(&data->print, NULL);
 	data->time_eat = atoi_philo(av[3]);
 	data->number = atoi_philo(av[1]);
 	data->time_die = atoi_philo(av[2]);
 	data->time_sleep = atoi_philo(av[4]);
 	if (ac == 6)
 		data->win = atoi_philo(av[5]);
+	data->start = ft_time();
 	return (data);
+}
+
+t_philo	*init(int ac, char **av)
+{
+	t_data *data;
+	t_philo *philo;
+	int		i;
+
+	philo = chaine_philo(atoi_philo(av[1]));
+	data = create_data(ac, av);
+	i = 0;
+	while (i < data->number)
+	{
+		philo->data = data;
+		philo = philo->next;
+		i++;
+	}
+	return (philo);
 }
