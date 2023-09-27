@@ -6,13 +6,14 @@
 #    By: elias <elias@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/29 19:25:41 by emoreau           #+#    #+#              #
-#    Updated: 2023/09/26 17:23:32 by elias            ###   ########.fr        #
+#    Updated: 2023/09/27 15:03:28 by elias            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC_DIR		= ./srcs/
 OBJ_DIR	= ./obj/
 SRCS	=	philo.c\
+			init.c
 
 OBJS = $(patsubst %.c,$(OBJ_DIR)%.o,$(SRCS))
 
