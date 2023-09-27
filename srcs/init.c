@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 17:09:33 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/09/27 17:26:18 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ t_data	*init(int ac, char **av)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	pthread_mutex_init(&data->print, NULL);
+	pthread_mutex_init(data->print, NULL);
 	data->time_eat = atoi_philo(av[3]);
 	data->number = atoi_philo(av[1]);
 	data->time_die = atoi_philo(av[2]);

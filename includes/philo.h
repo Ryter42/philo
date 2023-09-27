@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:06:31 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 16:58:40 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/09/27 17:24:16 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_data
 	int time_eat;
 	int time_sleep;
 	int win;
-	pthread_mutex_t print;
+	pthread_mutex_t *print;
 	// struct s_philo *philo;
 
 }	t_data;

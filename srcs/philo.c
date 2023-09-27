@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 17:13:52 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/09/27 17:23:45 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,14 @@ int	die(t_data *data)
 
 void eat(t_philo *philo)
 {
+	pthread_mutex_lock(philo->data->print);
 	pthread_mutex_lock(philo->fork);
 	printf("philosophe %d has taken a fork\n", philo->num);
 	pthread_mutex_lock(philo->next->fork);
 	printf("philosophe %d has taken a fork\n", philo->num);
 	printf("philosophe %d is eating\n", philo->num);
+
+	pthread_mutex_unlock(philo->data->print);
 	usleep(philo->data->time_eat * 1000);
 	pthread_mutex_unlock(philo->fork);
 	pthread_mutex_unlock(philo->next->fork);
