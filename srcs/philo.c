@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 16:32:34 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 17:13:52 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,58 +31,67 @@ int	die(t_data *data)
 	return (1);
 }
 
-void eat(t_data *data)
+void eat(t_philo *philo)
 {
-	pthread_mutex_lock(&data->philo->fork);
-	printf("philosophe %d has taken a fork\n", data->philo->num);
-	pthread_mutex_lock(&data->philo->next->fork);
-	printf("philosophe %d has taken a fork\n", data->philo->num);
-	printf("philosophe %d is eating\n", data->philo->num);
-	usleep(data->time_eat * 1000);
-	pthread_mutex_unlock(&data->philo->fork);
-	pthread_mutex_unlock(&data->philo->next->fork);
+	pthread_mutex_lock(philo->fork);
+	printf("philosophe %d has taken a fork\n", philo->num);
+	pthread_mutex_lock(philo->next->fork);
+	printf("philosophe %d has taken a fork\n", philo->num);
+	printf("philosophe %d is eating\n", philo->num);
+	usleep(philo->data->time_eat * 1000);
+	pthread_mutex_unlock(philo->fork);
+	pthread_mutex_unlock(philo->next->fork);
 	// ft_sleep(data->time_eat, 1);
 }
 
-void	ft_spleep(t_data *data)
+void	ft_spleep(t_philo *philo)
 {
-	printf("philosophe %d is sleeping\n", data->philo->num);
-	usleep(data->time_sleep * 1000);
+	printf("philosophe %d is sleeping\n", philo->num);
+	usleep(philo->data->time_sleep * 1000);
 
 	// ft_usleep(data->time_sleep);
 }
 
 void	*routine(void *arg)
 {
-	t_data *data;
+	t_philo *philo;
 
-	data = (t_data *)arg;
-	printf("\e[0;50mthread du philosophe %d\n", data->philo->num);
-	if (data->philo->num % 2 == 0)
-		usleep((data->time_eat * 1000) / 2);
+	philo = (t_philo *)arg;
+	// printf("\e[0;50mthread du philosophe %d\n", data->philo->num);
+	if (philo->num % 2 == 0)
+		usleep((philo->data->time_eat * 1000) / 2);
 	// printf("die = %d\n", die(data));
 	// // while(die(data) == 0)
 	while(1)
 	{
 		// printf("thread du philosophe %d\n", data->philo->num);
-		eat(data);
-		ft_spleep(data);
+		eat(philo);
+		ft_spleep(philo);
 		// ft_usleep(1000, 5);
 		// break;
 	}
-	return (data);
+	return (philo);
 }
 
 int	main(int ac, char **av)
 {
 	int	i;
+	t_philo	*philo;
 	t_data	*data;
 
 	if (ac != 5 && ac != 6)
 		return (printf("erreur arg\n"), 0);
 	i = 0;
 
+	philo = chaine_philo(atoi_philo(av[1]));
 	data = init(ac, av);
+	while (i < data->number)
+	{
+		philo->data = data;
+		philo = philo->next;
+		i++;
+	}
+	i = 0;
 	// (void)data;
 	// cree un thread pour chaque philosof
 	// un philosophe sur 2 manges
@@ -93,23 +102,17 @@ int	main(int ac, char **av)
 	// 	printf("%d\n", data->philo->num);
 	// 	data->philo = data->philo->next;
 	// }
-	printf("%d\n", data->philo->num);
 
-	while (i < data->number)
+	while (i < philo->data->number)
 	{
-		printf("\e[0;31mthread %d crée\n", data->philo->num);
-		pthread_create(&data->philo->thread, NULL, &routine, (void *)data);
-		// fflush(stdout);
-		// printf("thread du philosophe %d\n", data->philo->num);
-		data->philo = data->philo->next;
+		pthread_create(&philo->thread, NULL, &routine, (void *)philo);
+		philo = philo->next;
 		i++;
 	}
-	// pthread_create(&data->philo->thread, NULL, &routine, (void *)data);
-	data->philo = data->philo->next;
 	while (i != 0)
 	{
-		pthread_join(data->philo->thread, NULL);
-		data->philo = data->philo->next;
+		pthread_join(philo->thread, NULL);
+		philo = philo->next;
 		i++;
 	}
 

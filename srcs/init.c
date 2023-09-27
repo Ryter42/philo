@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 16:32:06 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 17:09:33 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,13 @@ t_philo	*create_philo(t_philo *next, int i)
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
-	philo->thread = malloc(sizeof(pthread_t));
+	philo->thread = (pthread_t)malloc(sizeof(pthread_t));
 	if (!philo->thread)
 		return (NULL);
-	pthread_mutex_init(&philo->fork, NULL);
+	philo->fork = malloc(sizeof(pthread_mutex_t));
+	if (!philo->thread)
+		return (NULL);
+	pthread_mutex_init(philo->fork, NULL);
 	philo->num = i;
 	philo->next = next;
 	return (philo);
@@ -73,9 +76,7 @@ t_philo	*create_philo(t_philo *next, int i)
 t_philo	*chaine_philo(int i)
 {
 	t_philo	*philo;
-	// int	a;
 
-	// a = 0;
 	philo = NULL;
 	while (i > 0)
 	{
@@ -90,7 +91,7 @@ t_data	*init(int ac, char **av)
 {
 	t_data *data;
 
-	data = malloc(sizeof(data));
+	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
 	pthread_mutex_init(&data->print, NULL);
@@ -100,6 +101,5 @@ t_data	*init(int ac, char **av)
 	data->time_sleep = atoi_philo(av[4]);
 	if (ac == 6)
 		data->win = atoi_philo(av[5]);
-	data->philo = chaine_philo(atoi_philo(av[1]));
 	return (data);
 }
