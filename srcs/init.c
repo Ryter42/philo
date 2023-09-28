@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 22:43:04 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/28 20:32:38 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ t_philo	*create_philo(t_philo *next, int i)
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
-	philo->thread = (pthread_t)malloc(sizeof(pthread_t));
-	if (!philo->thread)
-		return (NULL);
+	// philo->thread = malloc(sizeof(pthread_t));
+	// if (!philo->thread)
+	// 	return (NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t));
 	if (!philo->fork)
 		return (NULL);
@@ -70,6 +70,7 @@ t_data	*create_data(int ac, char **av)
 	if (!data)
 		return (NULL);
 	pthread_mutex_init(&data->print, NULL);
+	pthread_mutex_init(&data->dead, NULL);
 	data->time_eat = atoi_philo(av[3]);
 	data->number = atoi_philo(av[1]);
 	data->time_die = atoi_philo(av[2]);

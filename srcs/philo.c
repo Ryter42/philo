@@ -3,54 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 23:00:09 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/28 21:30:56 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	die(t_philo *philo)
+void	is_death(t_philo *philo)
 {
-	if (philo->last_time_to_eat - ft_time() == 0)
-		return (0);
-	else
-		return (1);
+	pthread_mutex_lock(&philo->data->dead);
+	if (ft_time() - philo->last_time_to_eat > philo->data->time_die)
+		philo->data->death = 0;
+	pthread_mutex_unlock(&philo->data->dead);
 }
 
-void eat(t_philo *philo)
+int	take_fork(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->print);
-	printf("philosophe %d n'a pas manger depuis %ld milliseconde\n", philo->num, ft_time() - philo->last_time_to_eat);
-	printf("---%d---\n", philo->data->time_die);
-	if (ft_time() - philo->last_time_to_eat > philo->data->time_die)
-	{
-		ft_print(philo, "is died");
-		philo->data->death = 0;
-		exit(1);
-	}
 	pthread_mutex_lock(philo->fork);
+	// printf("%ld		dernier fois que philosophe %d a manger\n", philo->last_time_to_eat, philo->num);
+	// printf("%ld		philosophe %d n'a pas manger depuis %ld milliseconde\n",ft_time(), philo->num, ft_time() - philo->last_time_to_eat);
+	// printf("---%d---\n", philo->data->time_die);
+	is_death(philo);
+	// printf("%d\n", philo->data->death);
+	if (cheak_death(philo) == 0)
+	{
+		ft_print(philo, "died");
+		pthread_mutex_unlock(&philo->data->print);
+		pthread_mutex_unlock(philo->fork);
+
+		return (0);
+	}
 	ft_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->next->fork);
 	ft_print(philo, "has taken a fork");
 	ft_print(philo, "is eating");
 	pthread_mutex_unlock(&philo->data->print);
-	usleep(philo->data->time_eat * 1000);
+	return (1);
+}
+
+int eat(t_philo *philo)
+{
+	if(take_fork(philo) == 0)
+		return(0);
 	philo->last_time_to_eat = ft_time();
-	// printf("\033[31m philosophe : %d heure du dernier repas : %ld\n\033[0m",philo->num, philo->last_time_to_eat);
+	usleep(philo->data->time_eat * 1000);
 	pthread_mutex_unlock(philo->fork);
 	pthread_mutex_unlock(philo->next->fork);
+	return (1);
+	// printf("\033[31m %ld	%d a pauser sa fourchette\n\033[0m", ft_time(), philo->num);
 	// ft_sleep(data->time_eat, 1);
 }
 
 void	ft_spleep(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->data->print);
 	ft_print(philo, "is sleeping");
+	pthread_mutex_unlock(&philo->data->print);
 	usleep(philo->data->time_sleep * 1000);
 }
 
+int	cheak_death(t_philo *philo)
+{
+	int i;
+			pthread_mutex_lock(&philo->data->dead);
+	i = philo->data->death;
+			pthread_mutex_unlock(&philo->data->dead);
+	return (i);
+}
 
 void	*routine(void *arg)
 {
@@ -64,24 +87,37 @@ void	*routine(void *arg)
 	// printf("nombre de tour a faire= %d\n", philo->data->win);
 	if (philo->i == -1)
 	{
-		while(philo->data->death == 1)
+		while(cheak_death(philo) == 1)
 		{
 			// printf("thread du philosophe %d\n", data->philo->num);
-			eat(philo);
+			if (eat(philo) == 0)
+				return (NULL);
+			if (cheak_death(philo) == 0)
+				return (NULL);
 			ft_spleep(philo);
+			if (cheak_death(philo) == 0)
+				return (NULL);			
+			pthread_mutex_lock(&philo->data->print);
+			ft_print(philo, " is thinking");
+			pthread_mutex_unlock(&philo->data->print);
 			// ft_usleep(1000, 5);
 			// break;
 		}
 	}
 	else
 	{
-		while(philo->i != philo->data->win && philo->data->death == 1)
+		while(philo->i != philo->data->win && cheak_death(philo) == 1)
 		{
 	// printf("nombre de tour = %d\n", philo->i);
 			// printf("thread du philosophe %d\n", data->philo->num);
-			eat(philo);
+			if (eat(philo) == 0)
+				return (NULL);
+			if (cheak_death(philo) == 0)
+				return (NULL);
 			ft_spleep(philo);
-			// ft_usleep(1000, 5);
+			pthread_mutex_lock(&philo->data->print);
+			ft_print(philo, " is thinking");
+			pthread_mutex_unlock(&philo->data->print);
 			// break;
 			philo->i++;
 		}
@@ -121,12 +157,12 @@ int	main(int ac, char **av)
 	}
 	while (i != 0)
 	{
-		// printf("i = %d", i);
+		// printf("i = %d\n", i);
 		pthread_join(philo->thread, NULL);
 		philo = philo->next;
 		i--;
 	}
-
+	ft_free(philo);
 
 	return (0);
 }

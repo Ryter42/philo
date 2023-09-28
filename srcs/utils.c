@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 22:02:13 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 22:04:23 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/28 21:37:21 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+ #include <string.h>
 
 void	ft_usleep(int time, int seconde)
 {
@@ -26,7 +27,12 @@ void	ft_usleep(int time, int seconde)
 
 void	ft_print(t_philo *philo, char *str)
 {
-	printf("%ld	%d %s\n", ft_time() - philo->data->start, philo->num, str);
+	// printf("ft_print %d\n", cheak_death(philo));
+	if (cheak_death(philo) == 1 || strcmp(str, "died") == 0)
+	// if (cheak_death(philo) == 1)
+	{	
+		printf("%ld	%d %s\n", ft_time() - philo->data->start, philo->num, str);
+	}
 }
 
 long	ft_time(void)

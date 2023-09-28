@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elias <elias@student.42.fr>                +#+  +:+       +#+         #
+#    By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/29 19:25:41 by emoreau           #+#    #+#              #
-#    Updated: 2023/09/27 22:06:08 by elias            ###   ########.fr        #
+#    Updated: 2023/09/28 21:38:02 by emoreau          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,13 +14,14 @@ SRC_DIR		= ./srcs/
 OBJ_DIR	= ./obj/
 SRCS	=	philo.c\
 			init.c\
-			utils.c
+			utils.c\
+			free.c
 
 OBJS = $(patsubst %.c,$(OBJ_DIR)%.o,$(SRCS))
 
 NAME	=	philo
 CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror -g3 #-fsanitize=thread
+CFLAGS	=	-Wall -Wextra -Werror -g3 -fsanitize=thread
 RM		=	rm -rf
 
 all:	${NAME}

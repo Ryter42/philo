@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:06:31 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 22:41:38 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/28 21:14:27 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_data
 	long start;
 	int	death;
 	pthread_mutex_t print;
+	pthread_mutex_t dead;
 	// struct s_philo *philo;
 
 }	t_data;
@@ -54,6 +55,10 @@ long	ft_time(void);
 void	ft_usleep(int time, int seconde);
 void	ft_print(t_philo *philo, char *str);
 long	ft_time(void);
+void	free_lst(t_philo *philo);
+void	philo_free(t_philo *philo, int i);
+void	ft_free(t_philo *philo);
+int		cheak_death(t_philo *philo);
 
 
 #endif
