@@ -6,38 +6,11 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/27 18:34:01 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 22:43:04 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/philo.h"
-
-int	atoi_philo(const char *nb)
-{
-	int		i;
-	int		s;
-	int		nbr;
-	char	*n;
-
-	n = (char *)nb;
-	nbr = 0;
-	s = 1;
-	i = 0;
-	while ((n[i] > 6 && n[i] < 14) || n[i] == 32)
-		i++;
-	if (nb[i] == '-' || nb[i] == '+')
-	{
-		if (nb[i] == '-')
-			s = -s;
-		i++;
-	}
-	while (nb[i] > 47 && nb[i] < 58)
-	{
-		nbr = nbr * 10 + nb[i] - 48;
-		i++;
-	}
-	return (nbr * s);
-}
 
 void	lstadd_back_philo(t_philo **lst, t_philo *new)
 {
@@ -69,6 +42,8 @@ t_philo	*create_philo(t_philo *next, int i)
 		return (NULL);
 	pthread_mutex_init(philo->fork, NULL);
 	philo->num = i;
+	philo->i = 0;
+	philo->last_time_to_eat = ft_time();
 	philo->next = next;
 	return (philo);
 }
@@ -87,13 +62,6 @@ t_philo	*chaine_philo(int i)
 	return (philo);
 }
 
-long	ft_time(void)
-{
-	struct timeval	time;
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec * 0.001));
-}
-
 t_data	*create_data(int ac, char **av)
 {
 	t_data *data;
@@ -108,7 +76,10 @@ t_data	*create_data(int ac, char **av)
 	data->time_sleep = atoi_philo(av[4]);
 	if (ac == 6)
 		data->win = atoi_philo(av[5]);
+	else
+		data->win = -1;
 	data->start = ft_time();
+	data->death = 1;
 	return (data);
 }
 

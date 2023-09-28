@@ -6,41 +6,40 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 18:32:36 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 23:00:09 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	ft_usleep(int time, int seconde)
+int	die(t_philo *philo)
 {
-	int	i;
-
-	i = 0;
-	while(i < seconde)
-	{
-		usleep(time * 1000);
-		i++;
-	}
-}
-
-int	die(t_data *data)
-{
-	(void)data;
-	ft_usleep(1000, 10);
-	return (1);
+	if (philo->last_time_to_eat - ft_time() == 0)
+		return (0);
+	else
+		return (1);
 }
 
 void eat(t_philo *philo)
 {
-	// pthread_mutex_lock(philo->data->print);
+	pthread_mutex_lock(&philo->data->print);
+	printf("philosophe %d n'a pas manger depuis %ld milliseconde\n", philo->num, ft_time() - philo->last_time_to_eat);
+	printf("---%d---\n", philo->data->time_die);
+	if (ft_time() - philo->last_time_to_eat > philo->data->time_die)
+	{
+		ft_print(philo, "is died");
+		philo->data->death = 0;
+		exit(1);
+	}
 	pthread_mutex_lock(philo->fork);
 	ft_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->next->fork);
 	ft_print(philo, "has taken a fork");
 	ft_print(philo, "is eating");
-	// pthread_mutex_unlock(philo->data->print);
+	pthread_mutex_unlock(&philo->data->print);
 	usleep(philo->data->time_eat * 1000);
+	philo->last_time_to_eat = ft_time();
+	// printf("\033[31m philosophe : %d heure du dernier repas : %ld\n\033[0m",philo->num, philo->last_time_to_eat);
 	pthread_mutex_unlock(philo->fork);
 	pthread_mutex_unlock(philo->next->fork);
 	// ft_sleep(data->time_eat, 1);
@@ -50,9 +49,8 @@ void	ft_spleep(t_philo *philo)
 {
 	ft_print(philo, "is sleeping");
 	usleep(philo->data->time_sleep * 1000);
-
-	// ft_usleep(data->time_sleep);
 }
+
 
 void	*routine(void *arg)
 {
@@ -62,22 +60,33 @@ void	*routine(void *arg)
 	// printf("\e[0;50mthread du philosophe %d\n", data->philo->num);
 	if (philo->num % 2 == 0)
 		usleep((philo->data->time_eat * 1000) / 2);
-	// printf("die = %d\n", die(data));
 	// // while(die(data) == 0)
-	while(1)
+	// printf("nombre de tour a faire= %d\n", philo->data->win);
+	if (philo->i == -1)
 	{
-		// printf("thread du philosophe %d\n", data->philo->num);
-		eat(philo);
-		ft_spleep(philo);
-		// ft_usleep(1000, 5);
-		// break;
+		while(philo->data->death == 1)
+		{
+			// printf("thread du philosophe %d\n", data->philo->num);
+			eat(philo);
+			ft_spleep(philo);
+			// ft_usleep(1000, 5);
+			// break;
+		}
+	}
+	else
+	{
+		while(philo->i != philo->data->win && philo->data->death == 1)
+		{
+	// printf("nombre de tour = %d\n", philo->i);
+			// printf("thread du philosophe %d\n", data->philo->num);
+			eat(philo);
+			ft_spleep(philo);
+			// ft_usleep(1000, 5);
+			// break;
+			philo->i++;
+		}
 	}
 	return (philo);
-}
-
-void	ft_print(t_philo *philo, char *str)
-{
-	printf("%ld	%d %s\n", ft_time() - philo->data->start, philo->num, str);
 }
 
 int	main(int ac, char **av)
@@ -112,9 +121,10 @@ int	main(int ac, char **av)
 	}
 	while (i != 0)
 	{
+		// printf("i = %d", i);
 		pthread_join(philo->thread, NULL);
 		philo = philo->next;
-		i++;
+		i--;
 	}
 
 

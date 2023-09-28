@@ -6,7 +6,7 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:06:31 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/27 18:33:50 by elias            ###   ########.fr       */
+/*   Updated: 2023/09/27 22:41:38 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 typedef struct s_philo
 {
 	int	num;
+	int	i;
+	long last_time_to_eat;
 	pthread_t thread;
 	pthread_mutex_t *fork;
 	struct s_philo *next;
@@ -36,6 +38,7 @@ typedef struct s_data
 	int time_sleep;
 	int win;
 	long start;
+	int	death;
 	pthread_mutex_t print;
 	// struct s_philo *philo;
 
@@ -48,4 +51,9 @@ void	lstadd_back_philo(t_philo **lst, t_philo *new);
 int		atoi_philo(const char *nb);
 void	ft_print(t_philo *philo, char *str);
 long	ft_time(void);
+void	ft_usleep(int time, int seconde);
+void	ft_print(t_philo *philo, char *str);
+long	ft_time(void);
+
+
 #endif
