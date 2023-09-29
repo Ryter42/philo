@@ -6,7 +6,7 @@
 /*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:08:49 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/28 21:30:56 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/09/29 18:26:59 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,53 @@ void	is_death(t_philo *philo)
 
 int	take_fork(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->print);
-	pthread_mutex_lock(philo->fork);
-	// printf("%ld		dernier fois que philosophe %d a manger\n", philo->last_time_to_eat, philo->num);
-	// printf("%ld		philosophe %d n'a pas manger depuis %ld milliseconde\n",ft_time(), philo->num, ft_time() - philo->last_time_to_eat);
-	// printf("---%d---\n", philo->data->time_die);
-	is_death(philo);
-	// printf("%d\n", philo->data->death);
-	if (cheak_death(philo) == 0)
-	{
-		ft_print(philo, "died");
-		pthread_mutex_unlock(&philo->data->print);
-		pthread_mutex_unlock(philo->fork);
 
-		return (0);
+	if (philo->num != philo->data->number)
+	{
+		pthread_mutex_lock(philo->fork);
+		// printf("mutex %d lock\n", philo->num);
+		// printf("%ld		dernier fois que philosophe %d a manger\n", philo->last_time_to_eat, philo->num);
+		// printf("%ld		philosophe %d n'a pas manger depuis %ld milliseconde\n",ft_time(), philo->num, ft_time() - philo->last_time_to_eat);
+		// printf("---%d---\n", philo->data->time_die);
+		if (cheak_death(philo) == 0)
+			return (0);
+		is_death(philo);
+		// printf("%d\n", philo->data->death);
+		if (cheak_death(philo) == 0)
+		{
+			ft_print(philo, "died");
+			// pthread_mutex_unlock(&philo->data->print);
+			pthread_mutex_unlock(philo->fork);
+	
+			return (0);
+		}
+		pthread_mutex_lock(philo->next->fork);
+		pthread_mutex_lock(&philo->data->print);
+		ft_print(philo, "has taken a fork");
+		// printf("mutex %d lock\n", philo->next->num);
+		ft_print(philo, "has taken a fork");
+		ft_print(philo, "is eating");
+		pthread_mutex_unlock(&philo->data->print);
 	}
-	ft_print(philo, "has taken a fork");
-	pthread_mutex_lock(philo->next->fork);
-	ft_print(philo, "has taken a fork");
-	ft_print(philo, "is eating");
-	pthread_mutex_unlock(&philo->data->print);
+	else
+	{
+		pthread_mutex_lock(philo->next->fork);
+		is_death(philo);
+		if (cheak_death(philo) == 0)
+		{
+			ft_print(philo, "died");
+			pthread_mutex_unlock(philo->fork);
+	
+			return (0);
+		}
+		pthread_mutex_lock(philo->fork);
+		pthread_mutex_lock(&philo->data->print);
+		ft_print(philo, "has taken a fork");
+		ft_print(philo, "has taken a fork");
+		ft_print(philo, "is eating");
+		pthread_mutex_unlock(&philo->data->print);
+	}
+	
 	return (1);
 }
 
@@ -52,7 +79,9 @@ int eat(t_philo *philo)
 	philo->last_time_to_eat = ft_time();
 	usleep(philo->data->time_eat * 1000);
 	pthread_mutex_unlock(philo->fork);
+	// printf("mutex %d unlock\n", philo->num);
 	pthread_mutex_unlock(philo->next->fork);
+	// printf("mutex %d unlock\n", philo->next->num);
 	return (1);
 	// printf("\033[31m %ld	%d a pauser sa fourchette\n\033[0m", ft_time(), philo->num);
 	// ft_sleep(data->time_eat, 1);
@@ -125,6 +154,66 @@ void	*routine(void *arg)
 	return (philo);
 }
 
+void	one_philo(t_philo *philo)
+{
+	ft_print(philo, "take a fork");
+	usleep(philo->data->time_die * 1000); 
+	ft_print(philo, "died");
+}
+
+int	ft_isdigit(int c)
+{
+	if (c > 47 && c < 58)
+		return (1);
+	else
+		return (0);
+}
+
+
+int	all_num(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	checknum(char **av)
+{
+	int	i;
+
+	i = 1;
+	while (av[i])
+	{
+		if (all_num(av[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	pars(char  **av)
+{
+	// if (atoi_philo(av[1]) == 1)
+	// 	return (-1);
+	if (checknum(av) == 0)
+		return (-1);
+	else
+		return (1);
+}
+
+// void	ft_error(int i)
+// {
+// 	if (i == -1)
+// 		one_philo(philo);
+// }
+
 int	main(int ac, char **av)
 {
 	int		i;
@@ -136,6 +225,8 @@ int	main(int ac, char **av)
 
 	i = 0;
 
+	if (pars(av) < 0)
+		return(printf("erreur arg\n"), 0);
 	philo = init(ac, av);
 	// (void)data;
 	// cree un thread pour chaque philosof
@@ -148,12 +239,15 @@ int	main(int ac, char **av)
 	// 	philo = philo->next;
 	// }
 	// printf("time = %ld\n", philo->data->start);
-
+	if (philo->data->number == 1)
+		return (one_philo(philo), ft_free(philo), 0);	
+	
 	while (i < philo->data->number)
 	{
 		pthread_create(&philo->thread, NULL, &routine, (void *)philo);
 		philo = philo->next;
 		i++;
+		// usleep(1000);
 	}
 	while (i != 0)
 	{
