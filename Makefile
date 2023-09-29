@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+         #
+#    By: elias <elias@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/29 19:25:41 by emoreau           #+#    #+#              #
-#    Updated: 2023/09/29 15:33:24 by emoreau          ###   ########.fr        #
+#    Updated: 2023/09/29 19:05:04 by elias            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,10 @@ OBJ_DIR	= ./obj/
 SRCS	=	philo.c\
 			init.c\
 			utils.c\
-			free.c
+			free.c\
+			routine.c\
+			dead.c\
+			pars.c
 
 OBJS = $(patsubst %.c,$(OBJ_DIR)%.o,$(SRCS))
 
