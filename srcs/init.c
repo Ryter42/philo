@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/09/29 15:49:51 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/10/01 19:28:29 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ t_philo	*create_philo(t_philo *next, int i)
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
-	// philo->thread = malloc(sizeof(pthread_t));
-	// if (!philo->thread)
-	// 	return (NULL);
 	philo->fork = malloc(sizeof(pthread_mutex_t));
 	if (!philo->fork)
 		return (NULL);

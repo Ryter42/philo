@@ -6,7 +6,7 @@
 /*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:48:40 by elias             #+#    #+#             */
-/*   Updated: 2023/09/29 19:06:38 by elias            ###   ########.fr       */
+/*   Updated: 2023/10/01 19:28:53 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ int	checknum(char **av)
 
 int	pars(char  **av)
 {
-	// if (atoi_philo(av[1]) == 1)
-	// 	return (-1);
 	if (checknum(av) == 0)
 		return (-1);
 	else
