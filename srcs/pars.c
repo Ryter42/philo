@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:48:40 by elias             #+#    #+#             */
-/*   Updated: 2023/10/01 19:28:53 by elias            ###   ########.fr       */
+/*   Updated: 2023/10/03 16:09:19 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	isdigit_philo(int c)
 	else
 		return (0);
 }
-
 
 int	all_num(char *str)
 {
@@ -49,9 +48,20 @@ int	checknum(char **av)
 	return (1);
 }
 
-int	pars(char  **av)
+int	is_vide(char **av)
+{
+	if (atoi_philo(av[1]) < 0 || atoi_philo(av[2]) < 0 || atoi_philo(av[3]) < 0
+		|| atoi_philo(av[4]) < 0)
+		return (0);
+	else
+		return (1);
+}
+
+int	pars(char **av)
 {
 	if (checknum(av) == 0)
+		return (-1);
+	else if (is_vide(av) == 0)
 		return (-1);
 	else
 		return (1);

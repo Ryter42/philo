@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: elias <elias@student.42.fr>                +#+  +:+       +#+         #
+#    By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/29 19:25:41 by emoreau           #+#    #+#              #
-#    Updated: 2023/10/03 14:42:50 by elias            ###   ########.fr        #
+#    Updated: 2023/10/05 17:59:44 by emoreau          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRCS	=	philo.c\
 			utils.c\
 			free.c\
 			routine.c\
+			routine_2.c\
 			dead.c\
 			pars.c
 

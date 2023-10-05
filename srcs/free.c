@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 19:41:41 by emoreau           #+#    #+#             */
-/*   Updated: 2023/10/01 19:28:15 by elias            ###   ########.fr       */
+/*   Updated: 2023/10/03 16:10:11 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_lst(t_philo *philo)
 
 void	philo_free(t_philo *philo, int i)
 {
-	t_philo *tmp;
+	t_philo	*tmp;
 
 	while (philo->num != i)
 	{
@@ -32,7 +32,7 @@ void	philo_free(t_philo *philo, int i)
 	free(philo);
 }
 
-void 	ft_free(t_philo *philo)
+void	ft_free(t_philo *philo)
 {
 	int	i;
 

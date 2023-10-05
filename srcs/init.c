@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 15:02:34 by elias             #+#    #+#             */
-/*   Updated: 2023/10/01 19:28:29 by elias            ###   ########.fr       */
+/*   Updated: 2023/10/05 18:10:34 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/philo.h"
+#include "../includes/philo.h"
 
 void	lstadd_back_philo(t_philo **lst, t_philo *new)
 {
@@ -61,11 +61,13 @@ t_philo	*chaine_philo(int i)
 
 t_data	*create_data(int ac, char **av)
 {
-	t_data *data;
+	t_data	*data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
+	// pthread_mutex_init(&data->print_dead, NULL);
+	pthread_mutex_init(&data->speak, NULL);
 	pthread_mutex_init(&data->print, NULL);
 	pthread_mutex_init(&data->dead, NULL);
 	data->time_eat = atoi_philo(av[3]);
@@ -78,13 +80,14 @@ t_data	*create_data(int ac, char **av)
 		data->win = -1;
 	data->start = ft_time();
 	data->death = 1;
+	data->see_dead = 1;
 	return (data);
 }
 
 t_philo	*init(int ac, char **av)
 {
-	t_data *data;
-	t_philo *philo;
+	t_data	*data;
+	t_philo	*philo;
 	int		i;
 
 	philo = chaine_philo(atoi_philo(av[1]));

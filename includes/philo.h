@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 17:06:31 by emoreau           #+#    #+#             */
-/*   Updated: 2023/09/29 19:06:14 by elias            ###   ########.fr       */
+/*   Updated: 2023/10/05 18:42:44 by emoreau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PHILO_H
+# define PHILO_H
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -20,28 +20,30 @@
 
 typedef struct s_philo
 {
-	int	num;
-	int	i;
-	long last_time_to_eat;
-	pthread_t thread;
-	pthread_mutex_t *fork;
-	struct s_philo *next;
+	int				num;
+	int				i;
+	long			last_time_to_eat;
+	pthread_t		thread;
+	pthread_mutex_t	*fork;
+	struct s_philo	*next;
 	struct s_data	*data;	
 
 }	t_philo;
 
 typedef struct s_data
 {
-	int	number;
-	int time_die;
-	int time_eat;
-	int time_sleep;
-	int win;
-	long start;
-	int	death;
-	pthread_mutex_t print;
-	pthread_mutex_t dead;
-	// struct s_philo *philo;
+	int				number;
+	int				time_die;
+	int				time_eat;
+	int				time_sleep;
+	int				win;
+	long			start;
+	int				death;
+	int				see_dead;
+	// pthread_mutex_t	print_dead;
+	pthread_mutex_t	speak;
+	pthread_mutex_t	print;
+	pthread_mutex_t	dead;
 
 }	t_data;
 
@@ -65,10 +67,13 @@ void	ft_sleep(t_philo *philo);
 void	*routine(void *arg);
 void	is_death(t_philo *philo);
 int		cheak_death(t_philo *philo);
-int		pars(char  **av);
+int		pars(char **av);
 int		checknum(char **av);
 int		all_num(char *str);
 int		isdigit_philo(int c);
-
+void	loop_a(t_philo *philo);
+void	loop_b(t_philo *philo);
+int		last_fork(t_philo *philo);
+void usleep_loop(t_philo *philo, int b);
 
 #endif
