@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:50:40 by elias             #+#    #+#             */
-/*   Updated: 2023/10/05 18:54:39 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/10/05 20:19:26 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	last_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->next->fork);
 	// is_death(philo);
-	if (cheak_death(philo) == 0)
+	if (death(philo) == 0)
 	{
 		// ft_print(philo, "died");
 		pthread_mutex_unlock(philo->next->fork);
@@ -37,10 +37,10 @@ int	take_fork(t_philo *philo)
 	if (philo->num % 2 == 1)
 	{
 		pthread_mutex_lock(philo->fork);
-		if (cheak_death(philo) == 0)
+		if (death(philo) == 0)
 			return (0);
 		// is_death(philo);
-		if (cheak_death(philo) == 0)
+		if (death(philo) == 0)
 		{
 			// ft_print(philo, "died");
 			pthread_mutex_unlock(philo->fork);
@@ -63,14 +63,14 @@ int	take_fork(t_philo *philo)
 
 void	loop_a(t_philo *philo)
 {
-	while (cheak_death(philo) == 1)
+	while (death(philo) == 1)
 	{
 		if (eat(philo) == 0)
 			return ;
-		if (cheak_death(philo) == 0)
+		if (death(philo) == 0)
 			return ;
 		ft_sleep(philo);
-		if (cheak_death(philo) == 0)
+		if (death(philo) == 0)
 			return ;
 		pthread_mutex_lock(&philo->data->print);
 		ft_print(philo, " is thinking");

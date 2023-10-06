@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 16:26:32 by emoreau           #+#    #+#             */
-/*   Updated: 2023/10/05 18:42:12 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/10/05 20:21:41 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	loop_b(t_philo *philo)
 {
-	while (philo->i != philo->data->win && cheak_death(philo) == 1)
+	while (philo->i != philo->data->win && death(philo) == 1)
 	{
 		if (eat(philo) == 0)
 			return ;
@@ -23,7 +23,7 @@ void	loop_b(t_philo *philo)
 		{
 			break ;
 		}
-		if (cheak_death(philo) == 0)
+		if (death(philo) == 0)
 			return ;
 		ft_sleep(philo);
 		pthread_mutex_lock(&philo->data->print);
@@ -37,11 +37,11 @@ void usleep_loop(t_philo *philo, int b)
 	int	i;
 
 	i = 0;
-	while (i < b)
+	while (i < b / 10)
 	{
-		// printf("%d\n", cheak_death(philo));
-		usleep(1000);
-		if (cheak_death(philo) == 0)
+		// printf("%d\n", death(philo));
+		usleep(1000 * 10);
+		if (check_death(philo) == 0)
 			return ;
 		i++;
 	}
@@ -68,11 +68,12 @@ void	ft_sleep(t_philo *philo)
 	ft_print(philo, "is sleeping");
 	pthread_mutex_unlock(&philo->data->print);
 	usleep_loop(philo, philo->data->time_sleep);
+	// usleep(1000 * philo->data->time_sleep);
 	// while (i < philo->data->time_sleep)
 	// {
-	// 	// printf("%d\n", cheak_death(philo));
+	// 	// printf("%d\n", death(philo));
 	// 	usleep(1000);
-	// 	if (cheak_death(philo) == 0)
+	// 	if (death(philo) == 0)
 	// 		return ;
 	// 	i++;
 	// }

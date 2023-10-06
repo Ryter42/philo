@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 22:02:13 by elias             #+#    #+#             */
-/*   Updated: 2023/10/05 18:14:25 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/10/05 20:19:26 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_usleep(int time, int seconde)
 void	ft_print(t_philo *philo, char *str)
 {
 	// if (philo->data->death == 1 || strcmp(str, "died") == 0)
-	if (cheak_death(philo) == 1 || strcmp(str, "died") == 0)
+	if (death(philo) == 1 || strcmp(str, "died") == 0)
 	{
 		pthread_mutex_lock(&philo->data->speak);
 		printf("%ld	%d %s\n", ft_time() - philo->data->start, philo->num, str);

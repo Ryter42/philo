@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dead.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emoreau <emoreau@student.42.fr>            +#+  +:+       +#+        */
+/*   By: elias <elias@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 18:52:57 by elias             #+#    #+#             */
-/*   Updated: 2023/10/05 18:58:22 by emoreau          ###   ########.fr       */
+/*   Updated: 2023/10/05 20:22:17 by elias            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,17 @@ void	is_death(t_philo *philo)
 	// pthread_mutex_unlock(&philo->data->dead);
 }
 
-int	cheak_death(t_philo *philo)
+int	check_death(t_philo *philo)
+{
+	int	i;
+
+	pthread_mutex_lock(&philo->data->dead);
+	i = philo->data->death;
+	pthread_mutex_unlock(&philo->data->dead);
+	return (i);
+}
+
+int	death(t_philo *philo)
 {
 	int	i;
 	
